@@ -43,15 +43,28 @@ public class Reservation {
 		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 	}
 	//Atualizaçao de datas ("remarcaçao de hospedagem)
-	public void updateDates(Date checkIn, Date CheckOut) {
+	public String updateDates(Date checkIn, Date CheckOut) {	
+		Date now = new Date();
+		//testa se a data de check-in ou check-out nao sao posteriores a data atual
+		if(checkIn.before(now) || checkOut.before(now)) {
+			return "Reservation dates for update must be future dates";
+		}
+		//testa se a data de check-in nao é posterior à data de check-out
+		if(!checkOut.after(checkIn)) {
+			return "Error in reservation: Check-out date must be after check-in date";	
+		}
+		
 		this.checkIn = checkIn;
-		this.checkOut = CheckOut;		
+		this.checkOut = CheckOut;
+		
+		return null;
 	}
+	
 	//Sobrescrita do metodo toString para se escrever todos os dados que se quer obter no codigo
 	@Override
 	public String toString() {
 		
-		return "Room " + roomNumber + ", check-in: " + format.format(checkIn) + ", check-out: " + format.format(checkOut)
-		       + ", " + duration() + " nights";
+		return "Room " + roomNumber + ", check-in: " + format.format(checkIn) + ", check-out: " + format.format(checkOut)	  
+		        + ", " + duration() + " nights";
 	}
 }
